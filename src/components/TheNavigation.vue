@@ -11,11 +11,22 @@
                     <li class="nav-item">
                         <RouterLink class="nav-link" :to="{ name: 'home' }">Home</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!isAuthenticated">
                         <RouterLink class="nav-link" :to="{ name: 'login' }">Login</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!isAuthenticated">
                         <RouterLink class="nav-link" :to="{ name: 'signup' }">Signup</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="isAuthenticated">
+                        <RouterLink class="nav-link" to="/posts">Posts</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="isAuthenticated">
+                    <a
+                        href="#"
+                        class="nav-link"
+                        @click.prevent="onLogout()"
+                        >Logout</a
+                    >
                     </li>
                 </ul>
             </div>
@@ -24,6 +35,24 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import {LOGOUT_ACTION} from '../store/storeconstants'
+import  router  from '../router'
+
+const store = useStore()
+let isAuthenticated = computed(() => {
+    return store.getters.is_user_authenticated
+})
+
+const logout = () => {
+    store.dispatch(LOGOUT_ACTION)
+}
+
+const onLogout = () => {
+    logout();
+    router.replace('/login')
+}
 
 </script>
 

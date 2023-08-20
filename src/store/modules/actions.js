@@ -1,8 +1,19 @@
 import axios from "axios";
-import { LOGIN_ACTION, SET_USER_TOKEN_DATA_MUTATION, SIGNUP_ACTION } from "../storeconstants";
+import {AUTO_LOGIN_ACTION, LOGIN_ACTION, LOGOUT_ACTION, SET_USER_TOKEN_DATA_MUTATION, SIGNUP_ACTION } from "../storeconstants";
 import SignupValidations from "../../services/SignupValidatons";
 
 export default {
+
+    [LOGOUT_ACTION](context) {
+        context.commit(SET_USER_TOKEN_DATA_MUTATION, {
+            email: null,
+            token: null,
+            expiresIn: null,
+            refreshToken: null,
+            userId: null,
+        });
+        localStorage.removeItem('userData');
+    },
 
     async [LOGIN_ACTION](context, payload) {
         let postData = {
@@ -23,13 +34,15 @@ export default {
         }
 
         if (response.status === 200) {
-            context.commit(SET_USER_TOKEN_DATA_MUTATION, {
+            let tokenData = {
                 email: response.data.email,
                 token: response.data.idToken,
                 expiresIn: response.data.expiresIn,
                 refreshToken: response.data.refreshToken,
                 userId: response.data.localId
-            })
+            }
+            localStorage.setItem('userData', JSON.stringify(tokenData));
+            context.commit(SET_USER_TOKEN_DATA_MUTATION, tokenData)
         }
     },
 
@@ -57,15 +70,22 @@ export default {
         }
 
         // context.commit(LOADING_SPINNER_SHOW_MUTATION, false)
-
         if (response.status === 200) {
-            context.commit(SET_USER_TOKEN_DATA_MUTATION, {
+            let tokenData = {
                 email: response.data.email,
                 token: response.data.idToken,
                 expiresIn: response.data.expiresIn,
                 refreshToken: response.data.refreshToken,
                 userId: response.data.localId
-            })
+            }
+            localStorage.setItem('userData', JSON.stringify(tokenData));
+            context.commit(SET_USER_TOKEN_DATA_MUTATION, tokenData)
         }
-    }
+    },
+
+    [AUTO_LOGIN_ACTION](context) {
+        let userData = localStorage.getItem('userData');
+        context.commit(SET_USER_TOKEN_DATA_MUTATION, userData);
+    },
+
 };
