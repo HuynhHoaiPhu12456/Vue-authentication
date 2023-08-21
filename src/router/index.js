@@ -17,33 +17,31 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginPage,
-      meta: {auth: false}
+      meta: { auth: false }
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignupPage,
-      meta: {auth: false}
+      meta: { auth: false }
     },
     {
       path: '/posts',
       name: 'posts',
       component: PostsPage,
-      meta: {auth: true}
+      meta: { auth: true }
     },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if(
-    'auth' in to.meta &&
+  if (
     to.meta.auth &&
     !store.getters.is_user_authenticated
   ) {
     next('/login')
-  } 
+  }
   else if (
-    'auth' in to.meta &&
     !to.meta.auth &&
     store.getters.is_user_authenticated
   ) {

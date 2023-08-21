@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AUTO_LOGIN_ACTION, LOGIN_ACTION, LOGOUT_ACTION, SET_USER_TOKEN_DATA_MUTATION, SIGNUP_ACTION } from "../storeconstants";
+import { AUTO_LOGIN_ACTION, LOGIN_ACTION, LOGOUT_ACTION, SET_USER_TOKEN_DATA_MUTATION, SIGNUP_ACTION } from "../storeconstants";
 import SignupValidations from "../../services/SignupValidatons";
 
 export default {
@@ -79,13 +79,13 @@ export default {
                 userId: response.data.localId
             }
             localStorage.setItem('userData', JSON.stringify(tokenData));
-            context.commit(SET_USER_TOKEN_DATA_MUTATION, tokenData)
+            context.commit(SET_USER_TOKEN_DATA_MUTATION, JSON.stringify(tokenData))
         }
     },
 
     [AUTO_LOGIN_ACTION](context) {
         let userData = localStorage.getItem('userData');
-        context.commit(SET_USER_TOKEN_DATA_MUTATION, userData);
+        context.commit(SET_USER_TOKEN_DATA_MUTATION, JSON.parse(userData));
     },
 
 };

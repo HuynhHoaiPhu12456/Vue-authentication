@@ -2,13 +2,16 @@
 import { RouterLink, RouterView } from 'vue-router'
 import TheNavigation from './components/TheNavigation.vue';
 import TheLoader from './components/TheLoader.vue';
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { AUTO_LOGIN_ACTION } from './store/storeconstants';
 
 const store = useStore()
 const showLoading = computed(() => store.state.showLoading)
 // store.dispatch(AUTO_LOGIN_ACTION)
+onMounted(() => {
+  store.dispatch(AUTO_LOGIN_ACTION)
+})
 </script>
 
 <template>
